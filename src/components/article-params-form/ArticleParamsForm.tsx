@@ -23,12 +23,12 @@ type Props = {
 	clearArticle: () => void;
 };
 export const ArticleParamsForm = (props: Props) => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const [param, setParams] = useState<ArticleStateType>(defaultArticleState);
 	const asideRef = useRef<HTMLElement | null>(null);
 
 	const handleOpenForm = () => {
-		return setIsOpen(!isOpen);
+		return setIsMenuOpen(!isMenuOpen);
 	};
 
 	const changeFontFamily = (font: OptionType) => {
@@ -70,22 +70,24 @@ export const ArticleParamsForm = (props: Props) => {
 			}
 		};
 
-		isOpen
+		isMenuOpen
 			? window.addEventListener('mousedown', handleClick)
 			: window.removeEventListener('mousedown', handleClick);
 
 		return () => {
 			window.removeEventListener('mousedown', handleClick);
 		};
-	}, [isOpen]);
+	}, [isMenuOpen]);
 
 	return (
 		<>
-			<ArrowButton onMouseDown={handleOpenForm} isOpen={isOpen} />
+			<ArrowButton onMouseDown={handleOpenForm} isOpen={isMenuOpen} />
 			<aside
-				className={clsx(styles.container, { [styles.container_open]: isOpen })}
+				className={clsx(styles.container, {
+					[styles.container_open]: isMenuOpen,
+				})}
 				ref={asideRef}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={handleSubmit}>
 					<Text as='h2' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
@@ -119,7 +121,7 @@ export const ArticleParamsForm = (props: Props) => {
 
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' type='reset' onClick={handleReset} />
-						<Button title='Применить' type='submit' onClick={handleSubmit} />
+						<Button title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>
